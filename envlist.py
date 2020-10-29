@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Oct 20 01:18:30 2020
-
-@author: Ye Wen Xin
-"""
-
 #!/data/miniconda3/envs/env1/bin/python
 
 from filelock import FileLock
@@ -58,8 +51,7 @@ with lock:
         if pmode == WRITE_MODE:
             # append env to the clist
             # add code here
-            count = len(clist)
-            clist.append("cenv"+str(count))
+            clist.append(env)
         else:
             # get and remove env from clist
             # add code here
