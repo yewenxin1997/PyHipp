@@ -1,22 +1,37 @@
 import DataProcessingTools as DPT
 import matplotlib.pyplot as plt
+<<<<<<< HEAD
 import hickle as hkl
 import numpy as np
 import os
 import re
+=======
+import os
+import hickle as hkl
+import numpy as np
+>>>>>>> upstream/master
 from .misc import getChannelInArray
 
 class Waveform(DPT.DPObject):
     # Please change the class name according to your needs
     filename = 'waveform.hkl'  # this is the filename that will be saved if it's run with saveLevel=1
+<<<<<<< HEAD
     argsList = []  # these is where arguments used in the creation of the object are listed
+=======
+    argsList = [("mountainsDirectory", "mountains"), 
+        ("ouputDirectory","output"), ("templateFilename","templates.hkl")]
+>>>>>>> upstream/master
     level = 'channel'  # this is the level that this object will be created in
 
     def __init__(self, *args, **kwargs):
         DPT.DPObject.__init__(self, *args, **kwargs)
 
     def create(self, *args, **kwargs):
+<<<<<<< HEAD
         # this function will be called once to create this waveform object
+=======
+        # thie function will be called by PanGUI.main once to create this waveform object
+>>>>>>> upstream/master
         
         # one neat property of Object-Oriented Programming (OOP) structure is that 
         # you can create some field-value pairs that can be called and updated 
@@ -39,6 +54,7 @@ class Waveform(DPT.DPObject):
         # In this way, you don't need to return and pass in so many arguments 
         # across different functions anymore :)
         
+<<<<<<< HEAD
         
         # The following is some hints of the things-to-do:
         
@@ -60,21 +76,50 @@ class Waveform(DPT.DPObject):
         # Example:
         if self.data[0].all():
             # create object if data is not empty
+=======
+        # The following is some hints of the things-to-do:
+        # get current channel name
+        pwd = os.path.normpath(os.getcwd());
+        self.channel_filename = [os.path.basename(pwd)]  # 'channelxxx, xxx is the number of the channel'
+        self.read_templates()  # read the mountainsort template files
+        
+        # check on the mountainsort template data and create a DPT object accordingly
+        if self.data[0].all():
+            # create object if data is not empty
+            self.numSets = 1
+            # get array name
+            aname = DPT.levels.normpath(os.path.dirname(pwd))
+            self.array_dict = dict()
+            self.array_dict[aname] = 0
+            self.current_plot_type = None
+>>>>>>> upstream/master
             DPT.DPObject.create(self, *args, **kwargs)
         else:
             # create empty object if data is empty
             DPT.DPObject.create(self, dirs=[], *args, **kwargs)            
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> upstream/master
     def append(self, wf):
         # this function will be called by processDirs to append the values of certain fields
         # from an extra object (wf) to this object
         # It is useful to store the information of the objects for panning through in the future
         DPT.DPObject.append(self, wf)  # append self.setidx and self.dirs
+<<<<<<< HEAD
         self.data = self.data + wf.data
         for ar in wf.array_dict:
             self.array_dict[ar] = self.numSets
         self.numSets += 1
 
+=======
+        self.data += wf.data
+        # loop through array dictionary in wf
+        for ar in wf.array_dict:
+            self.array_dict[ar] = self.numSets
+        self.numSets += 1
+>>>>>>> upstream/master
         
     def plot(self, i = None, ax = None, getNumEvents = False, getLevels = False,\
              getPlotOpts = False, overlay = False, **kwargs):
@@ -98,6 +143,7 @@ class Waveform(DPT.DPObject):
         for (k, v) in plotOpts.items():
                     plotOpts[k] = kwargs.get(k, v)  
                     
+<<<<<<< HEAD
         plot_type = plotOpts['PlotType'].selected()  # this variable will store the selected item in 'Type'
 
         if getPlotOpts:  # this will be called by PanGUI.main to obtain the plotOpts to create a menu once we right-click on the axis
@@ -107,6 +153,20 @@ class Waveform(DPT.DPObject):
             self.current_plot_type = plot_type
 
         if getNumEvents:  
+=======
+        if getPlotOpts:  # this will be called by PanGUI.main to obtain the plotOpts to create a menu once we right-click on the axis
+            return plotOpts 
+
+        plot_type = plotOpts['PlotType'].selected()  # this variable will store the selected item in 'Type'
+
+        if self.current_plot_type is None:  # initial assignement of self.current_plot_type
+            self.current_plot_type = plot_type
+
+        if getNumEvents:  
+            # this will be called by PanGUI.main to return two values: 
+            # first value is the total number of items to pan through, 
+            # second value is the current index of the item to plot
+>>>>>>> upstream/master
             if self.current_plot_type == plot_type:  # no changes to plot_type
                 if plot_type == 'Channel':
                     return self.numSets, i
@@ -125,6 +185,7 @@ class Waveform(DPT.DPObject):
                 # find index that is larger than i
                 vi = (advals >= i).nonzero()
                 return len(self.array_dict), vi[0][0]
+<<<<<<< HEAD
 
 #             # this will be called by PanGUI.main to return two values: 
 #             # first value is the total number of items to pan through, 
@@ -156,6 +217,8 @@ class Waveform(DPT.DPObject):
 
             
             return  # please return two items here: <total-number-of-items-to-plot>, <current-item-index-to-plot>
+=======
+>>>>>>> upstream/master
                 
         if ax is None:
             ax = plt.gca()
@@ -167,13 +230,21 @@ class Waveform(DPT.DPObject):
         #################### start plotting ##################################
         ######################################################################
         fig = ax.figure  # get the parent figure of the ax
+<<<<<<< HEAD
+=======
+
+>>>>>>> upstream/master
         if plot_type == 'Channel':  # plot in channel level
             if self.current_plot_type == 'Array':
                 self.remove_subplots(fig)
                 ax = fig.add_subplot(1,1,1)
                 
             # plot the mountainsort data according to the current index 'i'
+<<<<<<< HEAD
             self.plot_data(i, ax, plotOpts, 1)
+=======
+            self.plot_data(i, ax, plotOpts)
+>>>>>>> upstream/master
             self.current_plot_type = 'Channel'
                     
         elif plot_type == 'Array':  # plot in channel level
@@ -197,6 +268,7 @@ class Waveform(DPT.DPObject):
                 # get channel name
                 currchname = self.dirs[currch]
                 # get axis position for channel
+<<<<<<< HEAD
                 ax, isCorner = getChannelInArray(currchname, fig)
                 self.plot_data(currch, ax, plotOpts, isCorner)
                 currch += 1
@@ -226,6 +298,13 @@ class Waveform(DPT.DPObject):
         return ax
     
     
+=======
+                ax = getChannelInArray(currchname, fig)
+                self.plot_data(currch, ax, plotOpts)
+                currch += 1
+                
+            self.current_plot_type = 'Array'
+>>>>>>> upstream/master
     
     #%% helper functions        
     # Please make use of the properties of the OOP to call and edit the field-value
@@ -233,6 +312,7 @@ class Waveform(DPT.DPObject):
     # This will greatly increase the efficiency in maintaining the codes,
     # especially for those lines that are used for multiple times in multiple places.
     # Other than that, this will also greatly increase the readability of the code
+<<<<<<< HEAD
     def plot_data(self, i, ax, plotOpts, isCorner):
         y = self.data[i]
         x = np.arange(y.shape[0])
@@ -255,3 +335,40 @@ class Waveform(DPT.DPObject):
 
         
     
+=======
+    def read_templates(self):
+        # make the following items as lists for the sake of self.append
+        template_fileanme = os.path.join(DPT.levels.resolve_level("day", self.channel_filename[0]),
+                                         self.args["mountainsDirectory"],
+                                         self.channel_filename[0],
+                                         self.args["ouputDirectory"],
+                                         self.args["templateFilename"])
+        if os.path.isfile(template_fileanme):
+            self.data = [np.squeeze(hkl.load(template_fileanme))]
+        else:
+            print('No mountainsort template file was found for {0}...'.format(self.channel_filename[0]))
+            self.data = [np.array([])]
+        
+    def plot_data(self, ind, ax, plotOpts):
+        # plot the mountainsort data according to the index 'ind'
+        y = self.data[ind]
+        x = np.arange(y.shape[0])
+        ax.plot(x, y)
+
+        ########labels###############
+        if not plotOpts['TitleOff']:  # if TitleOff icon in the right-click menu is clicked
+            ax.set_title(self.dirs[ind])
+                
+        if not plotOpts['LabelsOff']:  # if LabelsOff icon in the right-click menu is clicked
+            ax.set_xlabel('Time (sample unit)')
+            ax.set_ylabel('Voltage (uV)')
+            
+        if plotOpts['TicksOff']:
+            ax.set_xticks([])
+            ax.set_yticks([])
+
+    def remove_subplots(self, fig):
+        for x in fig.get_axes():  # remove all axes in current figure
+            x.remove()    
+        
+>>>>>>> upstream/master
